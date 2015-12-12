@@ -15,13 +15,13 @@ wget -q -O - http://oceandata.sci.gsfc.nasa.gov/MODISA/L2/2006/005/ |grep SST4|w
 
 # File name, substitution 
 get basename
-<pre><code>for FILE in *.tif;do echo ${FILE%.tif};done</pre></code>
+<pre><code>for FILE in &#42;.tif;do echo ${FILE%.tif};done</pre></code>
 
 string substitution-strip leading C
-<pre><code>for FILE in *.jpg;do mv $FILE ${FILE/C};done</pre></code>
+<pre><code>for FILE in &#42;.jpg;do mv $FILE ${FILE/C};done</pre></code>
 replace leading C with something else
-<pre><code>for FILE in *.jpg;do echo ${FILE/C/ballz_};done</pre></code>
+<pre><code>for FILE in &#42;.jpg;do echo ${FILE/C/ballz_};done</pre></code>
 get basename
-<pre><code>for TIF in */*.tif;do echo ${TIF##*/} ;done</pre></code>
+<pre><code>for TIF in &#42;/&#42;.tif;do echo ${TIF##&#42;/} ;done</pre></code>
 n40w078/grdn40w078_1.tif grdn40w078_1.tif 
 
