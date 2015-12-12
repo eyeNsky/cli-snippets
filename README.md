@@ -23,5 +23,5 @@ replace leading C with something else
 <pre><code>for FILE in *.jpg;do echo ${FILE/C/ballz_};done</pre></code>
 get basename
 <pre><code>for TIF in */*.tif;do echo ${TIF##*/} ;done</pre></code>
-n40w078/grdn40w078_1.tif grdn40w078_1.tif
+n40w078/grdn40w078_1.tif grdn40w078_1.tif 
 
