@@ -2,8 +2,6 @@ sometimes the knowing<br>
 can not be found in what works<br>
 but rather, what fails<br>
 
-jon
-
 # How does that for loop work? sed what?
 A couple of things I've found really useful. Mostly copy pastes from other sources that I've collected. I'll try to document the original reference if I have it. If you see something I've tweezed from you and would like credit let me know.
 
