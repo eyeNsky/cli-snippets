@@ -1,6 +1,6 @@
-sometimes the knowing
-can not be found in what works
-but rather, what fails
+sometimes the knowing<br>
+can not be found in what works<br>
+but rather, what fails<br>
 
 jon
 
