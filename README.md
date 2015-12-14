@@ -24,6 +24,6 @@ get basename
 n40w078/grdn40w078_1.tif grdn40w078_1.tif 
 
 # ogr
-<pre><code> for SHP in &#42/roads.shp; do ogr2ogr -sql "SELECT &#42 FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
+<pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
 
 
