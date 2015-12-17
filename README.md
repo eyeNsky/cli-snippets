@@ -29,3 +29,10 @@ n40w078/grdn40w078_1.tif grdn40w078_1.tif
 # sed
 <pre><code>sed -i '' 's|http://aws.com/|http://azure.net/|' *.HTM</code></pre>
 
+
+# VirtualBox-Untested!!
+Found this here:
+https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
+
+<pre><code>VBoxManage clonehd windows_xp64.VHDX --format RAW windows_xp64.RAW 
+dd if=windows_xp64.RAW of=/dev/sdf</pre></code>
