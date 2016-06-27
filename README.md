@@ -23,7 +23,13 @@ get basename
 <pre><code>for TIF in &#42;/&#42;.tif;do echo ${TIF##&#42;/} ;done
 n40w078/grdn40w078_1.tif grdn40w078_1.tif</pre></code>
  
-# USGS 
+# USGS <br>
+Make sure number of sub-directories == number of zip files
+
+<pre><code>for ZIP in *.zip;do echo $ZIP;done | wc -l
+503
+for DIR in */grd*/;do echo $DIR;done | wc -l
+503</pre></code>
 IFSAR DEMs with bash
 <pre><code>for ZIP in *.zip;do unzip $ZIP -d ${ZIP/.zip/};done
 for DIR in */;do gdalwarp -t_srs EPSG:4326 -co TILED=YES $DIR*s**/ ../tifs/${DIR/\//}.tif;done</pre></code>
