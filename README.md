@@ -34,6 +34,10 @@ IFSAR DEMs with bash
 <pre><code>for ZIP in *.zip;do unzip $ZIP -d ${ZIP/.zip/};done
 for DIR in */;do gdalwarp -t_srs EPSG:4326 -co TILED=YES $DIR*s**/ ../tifs/${DIR/\//}.tif;done</pre></code>
 
+Had poor luck with the .img->.tif format in ossim tried this (the single quote is needed to keep the &&'s together):
+
+<pre><code>ls */*.img | parallel -j 8 'gdalwarp -tr 0.00003 0.00003 {} ../tmp/{/.}.tif && gdal_translate -of AAIGrid ../tmp/{/.}.tif ../grd/{/.} && gdal_translate -co TILED=YES ../grd/{/.} ../AK_3m_NED/{/.}.tif && rm -r ../grd/{/.} ../tmp/{/.}.tif'</pre></code>
+
 1/3 NED with parallel (note: could use gdal_translate; some directores are nested two deep, in this case they were in USGS_ prefixed dirs; also at least one of the directories contained a GeoTIFF rather that an ArcGrid...)
 <pre><code>ls *.zip | parallel unzip {} -d{.}
 for DIR in */grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif
