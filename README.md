@@ -20,8 +20,12 @@ string substitution-strip leading C
 replace leading C with something else
 <pre><code>for FILE in &#42;.jpg;do echo ${FILE/C/new_};done</pre></code>
 get basename
-<pre><code>for TIF in &#42;/&#42;.tif;do echo ${TIF##&#42;/} ;done</pre></code>
-n40w078/grdn40w078_1.tif grdn40w078_1.tif 
+<pre><code>for TIF in &#42;/&#42;.tif;do echo ${TIF##&#42;/} ;done
+n40w078/grdn40w078_1.tif grdn40w078_1.tif</pre></code>
+ 
+# USGS IFSAR DEMs with bash
+<pre><code> for ZIP in *.zip;do unzip $ZIP -d ${ZIP/.zip/};done
+for DIR in */;do gdalwarp -t_srs EPSG:4326 -co TILED=YES $DIR*s**/ ../tifs/${DIR/\//}.tif;done</pre></code>
 
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
