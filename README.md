@@ -24,8 +24,13 @@ get basename
 n40w078/grdn40w078_1.tif grdn40w078_1.tif</pre></code>
  
 # USGS IFSAR DEMs with bash
-<pre><code> for ZIP in *.zip;do unzip $ZIP -d ${ZIP/.zip/};done
+<pre><code>for ZIP in *.zip;do unzip $ZIP -d ${ZIP/.zip/};done
 for DIR in */;do gdalwarp -t_srs EPSG:4326 -co TILED=YES $DIR*s**/ ../tifs/${DIR/\//}.tif;done</pre></code>
+
+# 1/3 NED with parallel (note: could use gdal_translate; some directores are nested two deep, in this case they were in USGS_ prefixed dirs; also at least one of the directories contained a GeoTIFF rather that an ArcGrid...)
+<pre><code>ls *.zip | parallel unzip {} -d{.}
+for DIR in */grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif
+for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif</pre></code>
 
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
