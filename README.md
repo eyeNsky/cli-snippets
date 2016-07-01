@@ -50,6 +50,9 @@ for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:
 # sed
 <pre><code>sed -i '' 's|http://aws.com/|http://azure.net/|' *.HTM</code></pre>
 
+# s3cmd <br>
+List Sentinel zip files at AWS
+<pre><code>s3cmd ls s3://sentinel-s2-l1c/zips/</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
