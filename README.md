@@ -51,7 +51,8 @@ for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:
 <pre><code>sed -i '' 's|http://aws.com/|http://azure.net/|' *.HTM</code></pre>
 
 # ogr and sed to work with ais
-This outputs a lon,lat pair -74.884883,44.973767
+Based on: http://stackoverflow.com/questions/8914435/awk-sed-how-to-remove-parentheses-in-simple-text-file
+This removes the parens, letters POINT, the triple space at the beginning, replaces the single space with a ',' and outputs lon,lat pairs -74.884883,44.973767
 <pre><code> ogrinfo -sql "SELECT MMSI from Zone18_2014_08_Broadcast" Zone18_2014_08.gdb/ | grep POINT | sed 's/[()POINT]//g' | sed 's/   //g' | sed 's/ /,/g'</pre></code>
 
 # s3cmd <br>
