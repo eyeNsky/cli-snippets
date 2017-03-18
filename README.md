@@ -50,6 +50,10 @@ for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:
 # sed
 <pre><code>sed -i '' 's|http://aws.com/|http://azure.net/|' *.HTM</code></pre>
 
+# ogr and sed to work with ais
+This outputs a lon,lat pair -74.884883,44.973767
+<pre><code> ogrinfo -sql "SELECT MMSI from Zone18_2014_08_Broadcast" Zone18_2014_08.gdb/ | grep POINT | sed 's/[()POINT]//g' | sed 's/   //g' | sed 's/ /,/g'</pre></code>
+
 # s3cmd <br>
 List Sentinel zip files at AWS
 <pre><code>s3cmd ls s3://sentinel-s2-l1c/zips/</pre></code>
