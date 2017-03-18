@@ -55,6 +55,9 @@ Based on: http://stackoverflow.com/questions/8914435/awk-sed-how-to-remove-paren
 This removes the parens, letters POINT, the triple space at the beginning, replaces the single space with a ',' and outputs lon,lat pairs -74.884883,44.973767
 <pre><code> ogrinfo -sql "SELECT MMSI from Zone18_2014_08_Broadcast" Zone18_2014_08.gdb/ | grep POINT | sed 's/[()POINT]//g' | sed 's/   //g' | sed 's/ /,/g'</pre></code>
 
+This will output x,y,z to a txt file
+<pre><code>ogrinfo -sql "SELECT MMSI from Zone18_2014_08_Broadcast" Zone18_2014_08.gdb/ | grep POINT | sed 's/[(POINT]//g' | sed 's/)/,0/g' |sed 's/   //g' | sed 's/ /,/g' > out.txt</pre></code>
+
 # s3cmd <br>
 List Sentinel zip files at AWS
 <pre><code>s3cmd ls s3://sentinel-s2-l1c/zips/</pre></code>
