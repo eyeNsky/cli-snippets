@@ -62,10 +62,10 @@ This will output x,y,z to a txt file
 List Sentinel zip files at AWS
 <pre><code>s3cmd ls s3://sentinel-s2-l1c/zips/</pre></code>
 
-# az cli tools. parallel, pipe
+# az cli tools, bash, parallel, pipe
 From inside a directory containing z,x,y tile structure.
 Upload tiles:
-<pre><code> ls -1 -d */* | parallel --retries 3 --joblog tile-upload.log --progress -j %s "az storage blob upload-batch  --account-name %s --sas-token '%s' --content-cache-control 'public, max-age=%s' --max-connections 2 --destination %s/{} --source {} --validate-content" </code></pre>
+<pre><code> ls -1 -d */* | parallel --retries 3 --joblog tile-upload.log --progress -j %s "az storage blob upload-batch  --account-name %s --sas-token '%s' --content-cache-control 'public, max-age=%s' --max-connections 2 --destination CONTAINER/{} --source {} --validate-content" </code></pre>
 Cache to CDN with wget calls:
 <pre><code> for D in */*;do ls -1 $D/* >> ${D/\//_}.get;done && ls *.get | parallel wget -i {} -B https://CDN/CONTAINER/ -O /dev/null && rm *.get</code></pre>
 
