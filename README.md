@@ -64,6 +64,7 @@ List Sentinel zip files at AWS
 
 # az cli tools, bash, parallel, pipe
 From inside a directory containing z,x,y tile structure.
+All CAPS or %s are variables that would need to be passed to the cmd.
 Upload tiles:
 <pre><code> ls -1 -d */* | parallel --retries 3 --joblog tile-upload.log --progress -j %s "az storage blob upload-batch  --account-name %s --sas-token '%s' --content-cache-control 'public, max-age=%s' --max-connections 2 --destination CONTAINER/{} --source {} --validate-content" </code></pre>
 Cache to CDN with wget calls:
