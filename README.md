@@ -70,7 +70,13 @@ Upload tiles:
 Cache to CDN with wget calls:
 <pre><code> for D in */*;do ls -1 $D/* >> ${D/\//_}.get;done && ls *.get | parallel wget -i {} -B https://CDN/CONTAINER/ -O /dev/null && rm *.get</code></pre>
 
+# download, unzip and concatenate lidar tile index files
+<pre><code>wget -q -O - https://coast.noaa.gov/htdata/lidar1_z/geoid12a/data/ | grep tileindex.zip | awk '{split($0,a,">Index SHP"); split(a[1],b,"href=");print b[8]}' | wget -i -
 
+ls * | parallel unzip {}
+
+for SHP in *.shp;do ogr2ogr -append -nln lidar ../lidar.shp $SHP;done
+</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
