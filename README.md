@@ -78,6 +78,12 @@ ls * | parallel unzip {}
 for SHP in *.shp;do ogr2ogr -append -nln lidar ../lidar.shp $SHP;done
 </pre></code>
 
+# parse geom files for name, lat,lon, height
+<pre><code>
+ grep latlonh *.geom | awk '{split($0,a,":");print a[1]a[3]}'
+ </pre></code>
+ returns<br>C24581130.geom  28.987265723444441 -95.240654760067017 1108.390165457271678 WGE
+
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
