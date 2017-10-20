@@ -89,7 +89,7 @@ for SHP in *.shp;do ogr2ogr -append -nln lidar ../lidar.shp $SHP;done
  grep meters_per_pixel_x *.geom | awk '{split($0,a," ");print a[2]}' | awk 'NR == 1 { max=$1; min=$1; sum=0 }                       
    { if ($1>max) max=$1; if ($1<min) min=$1; sum+=$1;}
    END {printf "Min: %f\tMax: %f\tAverage: %f Count: %d\n", min, max, sum/NR, NR}'
-</code></pre>
+    </pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
