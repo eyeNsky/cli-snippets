@@ -84,6 +84,13 @@ for SHP in *.shp;do ogr2ogr -append -nln lidar ../lidar.shp $SHP;done
  </pre></code>
  returns<br>C24581130.geom  28.987265723444441 -95.240654760067017 1108.390165457271678 WGE
 
+# get min,max,average and count from geom files
+<pre><code>
+ grep meters_per_pixel_x *.geom | awk '{split($0,a," ");print a[2]}' | awk 'NR == 1 { max=$1; min=$1; sum=0 }                       
+   { if ($1>max) max=$1; if ($1<min) min=$1; sum+=$1;}
+   END {printf "Min: %f\tMax: %f\tAverage: %f Count: %d\n", min, max, sum/NR, NR}'
+</code></pre>
+
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
