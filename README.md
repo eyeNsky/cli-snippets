@@ -92,6 +92,10 @@ https://unix.stackexchange.com/questions/13731/is-there-a-way-to-get-the-min-max
    { if ($1>max) max=$1; if ($1&ltmin) min=$1; sum+=$1;}
    END {printf "Min: %f\tMax: %f\tAverage: %f Count: %d\n", min, max, sum/NR, NR}'
     </pre></code>
+# one line to embed lat,lon,height from geom into jpg
+<pre><code>
+grep latlonh *.geom | awk '{split($0,a,":");split(a[3],b," ");print "exiftool -q -overwrite_original_in_place -GPSLatitudeRef=N -GPSLatitude="b[1]" -GPSLongitudeRef=W -GPSLongitude="b[2]" -GPSAltitude="b[3]" "a[1] }'| sed -e 's|.geom|.jpg|' | parallel
+</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
