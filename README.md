@@ -22,6 +22,8 @@ replace leading C with something else
 get basename
 <pre><code>for TIF in &#42;/&#42;.tif;do echo ${TIF##&#42;/} ;done
 n40w078/grdn40w078_1.tif grdn40w078_1.tif</pre></code>
+replace space with underscore. Modified from:https://superuser.com/questions/678658/recursively-copy-and-rename-to-replace-spaces-with-underscore
+<pre><code>for TIF in *.tif;do mv "$TIF" "$(echo $TIF| sed 's/ /_/g')";done</pre></code>
  
 # USGS <br>
 Make sure number of sub-directories == number of zip files
