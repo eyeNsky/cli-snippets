@@ -99,7 +99,7 @@ https://unix.stackexchange.com/questions/13731/is-there-a-way-to-get-the-min-max
 grep latlonh *.geom | awk '{split($0,a,":");split(a[3],b," ");print "exiftool -q -overwrite_original_in_place -GPSLatitudeRef=N -GPSLatitude="b[1]" -GPSLongitudeRef=W -GPSLongitude="b[2]" -GPSAltitude="b[3]" "a[1] }'| sed -e 's|.geom|.jpg|' | parallel
 </pre></code>
 
-# two lines to get GPS hh:mm:ss from exif into an events file
+# two lines to get GPS hh:mm:ss from exif into an events file as seconds of week. need to know day of week to get the correct number of 86,400 offsets
 <pre><code>
 for JPG in *.jpg;do exif $JPG > ${JPG/.jpg/.txt};done
 grep -e "GPS Time" *.txt | awk '{split($0,a,":");split(a[2],b,"|");printf "%s %f\n", a[1],b[2]*3600+a[3]*60+a[4]+3456
