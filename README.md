@@ -47,6 +47,8 @@ for DIR in */grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -
 for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif</pre></code>
 Parse out URL from the National Map CSV file to a file for wget, skipping the header.
 <pre><code>awk 'NR>1 {split($0,a,",");print a[11]}' ned987_20171211_105245.csv > wget.list</pre></code>
+Or one line to wget via parallel
+<pre><code>awk 'NR>1 {split($0,a,",");print a[11]}' ned987_20171211_105245.csv | parallel -j 8 wget {}</pre></code>
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
 
