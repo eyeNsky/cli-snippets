@@ -43,9 +43,11 @@ Had poor luck with the .img->.tif format in ossim tried this (the single quote i
 1/3 NED with parallel (note: could use gdal_translate; some directores are nested two deep, in this case they were in USGS_ prefixed dirs; also at least one of the directories contained a GeoTIFF rather that an ArcGrid...)
 <pre><code>ls *.zip | parallel unzip {} -d{.}
 for DIR in */grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif
+#or
+for DIR in */grd*/;do echo $DIR;done | awk '{split($0,a,"\/");print"gdal_translate -a_srs EPSG:4326 -co TILED=YES", $0, "../tifs/"a[2]".tif"}' | parallel -j 16
 # nested grd dir
 for DIR in */USGS*/grd*/;do echo $DIR;done | parallel -j 8 gdalwarp -t_srs EPSG:4326 -co TILED=YES {} ../tifs/{/.}.tif
-for DIR in */grd*/;do echo $DIR;done | awk '{split($0,a,"\/");print"gdal_translate -a_srs EPSG:4326 -co TILED=YES", $0, "../tifs/"a[2]".tif"}' | parallel -j 16</pre></code>
+</pre></code>
 Parse out URL from the National Map CSV file to a file for wget, skipping the header.
 <pre><code>awk 'NR>1 {split($0,a,",");print a[11]}' ned987_20171211_105245.csv > wget.list</pre></code>
 Or one line to wget via parallel
