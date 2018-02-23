@@ -113,6 +113,11 @@ for JPG in *.jpg;do exif $JPG > ${JPG/.jpg/.txt};done
 grep -e "GPS Time" *.txt | awk '{split($0,a,":");split(a[2],b,"|");printf "%s %f\n", a[1],b[2]*3600+a[3]*60+a[4]+3456
 00}' > events.txt
 </pre></code>
+# export ossim height to env var
+Found the last piece about sourcing the file here:https://stackoverflow.com/questions/11988663/awk-setting-environment-variables-directly-from-within-an-awk-script
+<pre><code>
+ossim-info --height 27.9 -97.5 -P /mnt/elevation/prefs | grep -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL='%d'", a[2]}'>agl.sh&& source agl.sh
+</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
