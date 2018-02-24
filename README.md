@@ -125,7 +125,10 @@ also needed the fflush() from: https://unix.stackexchange.com/questions/33650/wh
 <pre><code>
 gpspipe -w | grep --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel
 </pre></code>
-
+This almost does it:
+<pre><code>
+gpspipe -w | grep --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL='%s'\n", a[2];fflush()}'
+</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
