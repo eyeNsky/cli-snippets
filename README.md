@@ -129,6 +129,10 @@ This almost does it:
 <pre><code>
 gpspipe -w | grep --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL='%d'\n", a[2];fflush()}'
 </pre></code>
+This may have to do. I can't get anything past the > symbol. All the output stacks up in there. This will do every thing in a single line but will need to be called on a timer. Maybe that is better as a constant update is no needed.
+<pre><code>
+gpspipe -w | grep -m 1 --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL=\"%d\"\n", a[2];fflush()}' > agl.sh && source agl.sh
+</pre></code>
 
 # VirtualBox-Untested!!
 Found this here:
