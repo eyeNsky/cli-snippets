@@ -119,7 +119,7 @@ Found the last piece about sourcing the file here:https://stackoverflow.com/ques
 ossim-info --height 27.9 -97.5 -P /mnt/elevation/prefs | grep -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL='%d'", a[2]}'>agl.sh&& source agl.sh
 </pre></code>
 
-# need to combine this with the above to pipe the env var all the way from gpspipe <br>
+# need to combine this with the above to pipe the env var all the way from gpspipe. may need to install gawk <br>
 the grep buffer was killing me! thanks: http://blog.jpalardy.com/posts/grep-and-output-buffering/
 also needed the fflush() from: https://unix.stackexchange.com/questions/33650/why-does-awk-do-full-buffering-when-reading-from-a-pipe
 <pre><code>
