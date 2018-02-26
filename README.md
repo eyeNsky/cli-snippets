@@ -119,7 +119,7 @@ Found the last piece about sourcing the file here:https://stackoverflow.com/ques
 ossim-info --height 27.9 -97.5 -P /mnt/elevation/prefs | grep -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL='%d'", a[2]}'>agl.sh&& source agl.sh
 </pre></code>
 
-# need to combine this with the above to pipe the env var all the way from gpspipe. may need to install gawk <br>
+# need to combine this with the above to pipe the env var all the way from gpspipe. may need to install gawk... <br>
 the grep buffer was killing me! thanks: http://blog.jpalardy.com/posts/grep-and-output-buffering/
 also needed the fflush() from: https://unix.stackexchange.com/questions/33650/why-does-awk-do-full-buffering-when-reading-from-a-pipe
 <pre><code>
@@ -132,6 +132,11 @@ gpspipe -w | grep --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");
 This does what I need it to do. I can't get anything past the > symbol, but don't need to. Just need one fix to set the base elevation. -m 1 in grep finds the first line with a 'lon' (longitude) and passes that down the pipe.
 <pre><code>
 gpspipe -w | grep -m 1 --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "export AGL=\"%d\"\n", a[2];fflush()}' > agl.sh && source agl.sh
+</pre></code>
+
+Stream elevations to a file that can be read by another program:
+<pre><code>
+gpspipe -w | grep --line-buffered lon | awk '{split($0,a,",");split(a[5],b,":");split(a[6],c,":");print "ossim-info --height " b[2], c[2]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "%d\n", a[2];fflush()}' > agl.txt
 </pre></code>
 
 # VirtualBox-Untested!!
