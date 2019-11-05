@@ -142,6 +142,9 @@ Get elevations for lat/lon pairs in a CSV file where each point has a "P" in the
 <pre><code>
 grep --line-buffered P LLH_GNV.csv |awk '{split($0,a,",");print "ossim-info --height " a[2], a[3]," -P /mnt/elevation/prefs";fflush()}' | parallel | grep --line-buffered -e "Height above MSL:" | awk '{split($0,a,":");printf "%f\n", a[2];fflush()}'
 </pre></code>
+# Copy librarys from ldd to a directory
+<pre><code>
+ldd ./<program> | grep -e "=>" | awk '{split($0,a," ");print "cp " a[3] " /out/path"}' | grep -e ".so" | bash
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
