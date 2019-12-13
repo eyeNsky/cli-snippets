@@ -146,6 +146,13 @@ grep --line-buffered P LLH_GNV.csv |awk '{split($0,a,",");print "ossim-info --he
 <pre><code>
 ldd ./executable | grep -e "=>" | awk '{split($0,a," ");print "cp " a[3] " /out/path"}' | grep -e ".so" | bash
 </pre></code>
+# Make footprints from ortho imagery
+<pre><code>
+ls *.tif | parallel --progress 'gdal_calc.py --quiet -A {}  --A_band 1 -B {} --B_band 2 -C {} --C_band 3 --calc="1*logical_and(A>0,B>0,C>0)" --outfile ../fp/{}'
+ls *.tif | parallel --progress gdal_polygonize.py {} -f GML {.}.gml
+for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done
+</pre></code>
+
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
