@@ -153,7 +153,10 @@ cd ../fp/
 ls *.tif | parallel --progress gdal_polygonize.py {} -f GML {.}.gml
 for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done
 </pre></code>
-
+# Buffer and dissolve Sentinel Cloud mask
+<pre><code>
+ogr2ogr -f SQLITE cloud-buffer.sqlite  L1C_T18SVE_A024032_20200128T154938_MSK_CLOUDS_B00.gml -dialect sqlite -sql "select ST_Union(ST_buffer(geometry, 5000)) as geometry FROM MaskFeature"
+</pre></code>
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
