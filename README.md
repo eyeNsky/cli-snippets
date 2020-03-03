@@ -157,8 +157,12 @@ for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done
 <pre><code>ogr2ogr -f SQLITE cloud-buffer.sqlite  L1C_T18SVE_A024032_20200128T154938_MSK_CLOUDS_B00.gml -dialect sqlite -sql "select ST_Union(ST_buffer(geometry, 5000)) as geometry FROM MaskFeature"</pre></code>
 # zgrep Sentinal index to awk
 <pre><code>zgrep -e "PASSED" ~/Downloads/index.csv.gz | awk '{split($0,a,",");print a[7]","a[10]","a[11]","a[12]","a[13]","a[14]}'</pre></code>
-returns cloud, lon, lat, lon, lat, URL
+returns: CLOUD_COVER, NORTH_LAT,SOUTH_LAT,WEST_LON,EAST_LON,BASE_URL
 <pre><code>0.0,44.2257183768,43.2356964818,29.1971656897,29.6265213541,gs://gcp-public-data-sentinel-2/tiles/35/T/PJ/S2A_MSIL1C_20150829T085006_N0204_R107_T35TPJ_20150829T085004.SAFE</pre></code>
+# zgrep Sentinel index to get images from a particular tile
+<pre><code>zgrep -e "18SVE" ~/Downloads/index.csv.gz > 18SVE.csv</pre></code>
+# zgrep, grep, sort, head to get 100 images from a particular for 2019/2020 sorted by cloud
+!zgrep -e "19TDF" index.csv.gz | grep -e "2020-\|2019" |   sort -n -k 7 -k 5 -t "," | head -n 100 
 
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
