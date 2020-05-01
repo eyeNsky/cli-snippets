@@ -169,6 +169,9 @@ https://github.com/dwtkns/gdal-cheat-sheet
 http://emapr.ceoas.oregonstate.edu/pages/education/how_to/how_to_ogr2ogr.html
 https://www.bostongis.com/?content_name=ogr_cheatsheet#41
 
+# Skip line-too-long pylint msg in Sublime
+https://stackoverflow.com/questions/23500499/how-can-i-ignore-a-lint-error-for-a-line-with-sublime-text-3-anaconda
+<pre><code>{ "pep8_ignore": ["E501"] }</pre></code>
 # VirtualBox-Untested!!
 Found this here:
 https://superuser.com/questions/255270/how-to-copy-vhd-file-to-physical-hard-disk-using-dd-command
