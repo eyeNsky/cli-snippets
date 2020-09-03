@@ -153,6 +153,17 @@ cd ../fp/
 ls *.tif | parallel --progress gdal_polygonize.py {} -f GML {.}.gml
 for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done
 </pre></code>
+
+Above does not add file name to the output. It only makes the footprints. This will add name into the fid col with a .1 or .xxx at the end.
+Need to figure out the sql to make this cleaner...
+<pre><code>
+ls *.tif | parallel --progress 'gdal_calc.py --quiet -A {}  --A_band 1 -B {} --B_band 2 -C {} --C_band 3 --calc="1*logical_and(A>0,B>0,C>0)" --outfile ../fp/{}'
+cd ../fp/
+# the {.} at the end adds the tif name as the layer. End up looking like P15458929.1
+ls *.tif | parallel --progress gdal_polygonize.py {} -f GML {.}.gml {.} 
+# the -nln keeps ogr from writing separate layers for each fp
+for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done
+</pre></code>
 # Buffer and dissolve Sentinel Cloud mask
 <pre><code>ogr2ogr -f SQLITE cloud-buffer.sqlite  L1C_T18SVE_A024032_20200128T154938_MSK_CLOUDS_B00.gml -dialect sqlite -sql "select ST_Union(ST_buffer(geometry, 5000)) as geometry FROM MaskFeature"</pre></code>
 # zgrep Sentinal index to awk
