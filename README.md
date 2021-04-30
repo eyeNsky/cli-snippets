@@ -58,7 +58,13 @@ S3 cli to poke around
 <pre><code>aws s3 ls --no-sign-request 3://prd-tnm/StagedProducts/Elevation/ </pre></code>
 Some of the TIFFs are COG (not sure if all are), so this returns a tileindex of the TIFFs in this dir:
 <pre><code> aws s3 ls  --no-sign-request --recursive s3://prd-tnm/StagedProducts/Elevation/1m/Projects/TX_South_B8_2018/TIFF/ | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://prd-tnm.s3.amazonaws.com/"a[4]}' | parallel -j 1 --progress gdaltindex .sqlite "{}" </pre></code>
-...and the index contains the path to the file.
+...and the index contains the file URL (drop the /vsicurl/).
+There is an index for the 1m project areas here:
+<pre><code>http://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/FullExtentSpatialMetadata/FESM_1m.gpkg</pre></code>
+1/9th shapefile index:
+<pre><code>http://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/Elevation/19/FullExtentSpatialMetadata</pre></code>
+1/3rd:
+<pre><code>https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/FullExtentSpatialMetadata/FESM_13.gpkg</pre></code>
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
 
