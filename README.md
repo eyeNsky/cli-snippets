@@ -55,9 +55,10 @@ Parse out URL from the National Map CSV file to a file for wget, skipping the he
 Or one line to wget via parallel
 <pre><code>awk 'NR>1 {split($0,a,",");print a[11]}' ned987_20171211_105245.csv | parallel -j 8 wget {}</pre></code>
 S3 cli to poke around
-<pre><code>aws s3 ls s--no-sign-request 3://prd-tnm/StagedProducts/Elevation/ </pre></code>
-Some of the TIFFs are COG (not sure if all are), so this works:
+<pre><code>aws s3 ls --no-sign-request 3://prd-tnm/StagedProducts/Elevation/ </pre></code>
+Some of the TIFFs are COG (not sure if all are), so this returns a tileindex of the TIFFs in this dir:
 <pre><code> aws s3 ls  --no-sign-request --recursive s3://prd-tnm/StagedProducts/Elevation/1m/Projects/TX_South_B8_2018/TIFF/ | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://prd-tnm.s3.amazonaws.com/"a[4]}' | parallel -j 1 --progress gdaltindex .sqlite "{}" </pre></code>
+...and the index contains the path to the file.
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
 
