@@ -208,7 +208,8 @@ Subset an area from the VRT
 <pre><code>gdal_translate -projwin -90.00714 29.22805 -90.00496 29.22685 "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210831a_RGB/cogs_20210831a_RGB.vrt" subset.tif
 </code></pre>
 
-Sooo, think about if you combined these last two pieces to chip out tiles to pass to AI/ML. Instead of writing an arbitrary size tiff, you could output a 256x256 JPEG with worldfile, pass that to your algorithm then use the worldfile with the classified image (maybe tiff for thematic data) to georeference. 
+Sooo, think about if you combined these last two pieces to chip out tiles to pass to AI/ML. Instead of writing an arbitrary size tiff, you could output a 256x256 JPEG with worldfile, pass that to your algorithm then use the worldfile with the classified image (maybe tiff for thematic data) to georeference. Have a script that generates 256x256 bounds (need to consider GSD) inside the bounding box of the data, select the ones that are wholey inside the valid area(s) then chip each one out in parallel.
+
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
 http://emapr.ceoas.oregonstate.edu/pages/education/how_to/how_to_ogr2ogr.html
