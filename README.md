@@ -184,8 +184,13 @@ returns: CLOUD_COVER, NORTH_LAT,SOUTH_LAT,WEST_LON,EAST_LON,BASE_URL
 # zgrep, grep, sort, head to get 100 images from a particular for 2019/2020 sorted by cloud
 !zgrep -e "19TDF" index.csv.gz | grep -e "2020-\|2019" |   sort -n -k 7 -k 5 -t "," | head -n 100 
 
-# Working with NOAA ERI data
-<pre><code>aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2021_Hurricane_Ida/20210902b_RGB | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel --progress gdal_translate -outsize 5% 5% -b 4 "{}" {/}</code></pre>
+# Working with NOAA ERI COG data
+Make a mask of valid areas 
+<pre><code>aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2021_Hurricane_Ida/20210902b_RGB | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel --progress gdal_translate -outsize 5% 5% -b 4 "{}" {/}
+
+gdalbuildvrt out.vrt *.tif
+gdal_polygonize.py out.vrt out.shp
+</code></pre>
 
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
