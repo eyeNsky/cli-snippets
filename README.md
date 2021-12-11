@@ -185,12 +185,6 @@ returns: CLOUD_COVER, NORTH_LAT,SOUTH_LAT,WEST_LON,EAST_LON,BASE_URL
 !zgrep -e "19TDF" index.csv.gz | grep -e "2020-\|2019" |   sort -n -k 7 -k 5 -t "," | head -n 100 
 
 # Working with NOAA ERI COG data
-Make a mask of valid areas 
-<pre><code>aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2021_Hurricane_Ida/20210902b_RGB | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel --progress gdal_translate -outsize 5% 5% -b 4 "{}" {/}
-gdalbuildvrt out.vrt *.tif
-gdal_polygonize.py out.vrt out.shp
-</code></pre>
-The resultant shapefile has valid areas of 255 and nodata as 0. There may be very few in between values that can be ignored.
 
 GDAL info for VRT
 <pre><code>
@@ -202,6 +196,13 @@ Build a sqlite index of all data for a storm
 aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2017_Hurricane_Irma/ | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel -j 1 --progress gdaltindex Irma-noaa-eri-pds.sqlite "{}"
 </code></pre>
 It takes about 2 seconds/tile to create the index, so nohup it.
+
+Make a mask of valid areas 
+<pre><code>aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2021_Hurricane_Ida/20210902b_RGB | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel --progress gdal_translate -outsize 5% 5% -b 4 "{}" {/}
+gdalbuildvrt out.vrt *.tif
+gdal_polygonize.py out.vrt out.shp
+</code></pre>
+The resultant shapefile has valid areas of 255 and nodata as 0. There may be very few in between values that can be ignored.
 
 Subset an area from the VRT
 <pre><code>gdal_translate -projwin -90.00714 29.22805 -90.00496 29.22685 "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210831a_RGB/cogs_20210831a_RGB.vrt" subset.tif
