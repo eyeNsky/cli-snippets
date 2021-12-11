@@ -187,10 +187,21 @@ returns: CLOUD_COVER, NORTH_LAT,SOUTH_LAT,WEST_LON,EAST_LON,BASE_URL
 # Working with NOAA ERI COG data
 Make a mask of valid areas 
 <pre><code>aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2021_Hurricane_Ida/20210902b_RGB | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel --progress gdal_translate -outsize 5% 5% -b 4 "{}" {/}
-
 gdalbuildvrt out.vrt *.tif
 gdal_polygonize.py out.vrt out.shp
 </code></pre>
+The resultant shapefile has valid areas of 255 and nodata as 0. There may be very few in between values that can be ignored.
+
+GDAL info for VRT
+<pre><code>
+gdalinfo "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210902b_RGB/cogs_20210902b_RGB.vrt"
+</code></pre>
+
+Build a sqlite index of all data for a storm
+<pre><code>
+aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2017_Hurricane_Irma/ | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel -j 1 --progress gdaltindex Irma-noaa-eri-pds.sqlite "{}"
+</code></pre>
+It takes about 2 seconds/tile to create the index, so nohup it.
 
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
