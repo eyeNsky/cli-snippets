@@ -213,6 +213,9 @@ Sooo, think about if you combined these last two pieces to chip out tiles to pas
 Stack the virtual drivers to work with the tile index files
 <pre><code>ogr2ogr -f SQLite tile_index_20201030b_RGB.sqlite  "/vsitar/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2020_Hurricane_Zeta/20201030b_RGB/tile_index_20201030b_RGB.tar" </code></pre>
 
+String the above together with some bash to edit the location attribute to have the full path to the images in the cloud.
+<pre><code>url='https://noaa-eri-pds.s3.amazonaws.com/2020_Hurricane_Zeta/20201030b_RGB/tile_index_20201030b_RGB.tar';pth=${url%/*};base=${url##*/};fn=${base%.tar};ogr2ogr -f SQLite $fn.sqlite '/vsitar/vsicurl/'$url;ogrinfo -dialect SQLite -sql "UPDATE $fn SET location = ('$pth'||'/'||location)" $fn.sqlite</code></pre>
+
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
 http://emapr.ceoas.oregonstate.edu/pages/education/how_to/how_to_ogr2ogr.html
