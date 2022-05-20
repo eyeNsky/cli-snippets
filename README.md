@@ -216,6 +216,21 @@ Stack the virtual drivers to work with the tile index files
 String the above together with some bash to edit the location attribute to have the full path to the images in the cloud.
 <pre><code>url='https://noaa-eri-pds.s3.amazonaws.com/2020_Hurricane_Zeta/20201030b_RGB/tile_index_20201030b_RGB.tar';pth=${url%/*};base=${url##*/};fn=${base%.tar};ogr2ogr -f SQLite $fn.sqlite '/vsitar/vsicurl/'$url;ogrinfo -dialect SQLite -sql "UPDATE $fn SET location = ('$pth'||'/'||location)" $fn.sqlite</code></pre>
 
+# NAIP data on Azure
+<pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
+
+Scape available tiff data for a state/year
+<pre><code>wget --spider --force-html -r -l2 https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/index.html 2>&1 | grep -e ".tif" | grep -e "https" </code></pre>
+
+Turn that into links GDAL can recognize in a file:
+<pre><code>wget --spider --force-html -r -l2 https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/index.html 2>&1 | grep -e ".tif" | grep -e "https" | awk '{split($0,a," ");print "/vsicurl/"a[3]}' > ri_060cm_2018.txt  </code></pre>
+
+Returns:
+head ri_060cm_2018.txt 
+/vsicurl/https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/41071/m_4107102_ne_19_060_20180930.tif
+/vsicurl/https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/41071/m_4107102_se_19_060_20180930.tif
+...
+
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
 http://emapr.ceoas.oregonstate.edu/pages/education/how_to/how_to_ogr2ogr.html
