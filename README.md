@@ -208,7 +208,7 @@ Subset an area from the VRT
 <pre><code>gdal_translate -projwin -90.00714 29.22805 -90.00496 29.22685 "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210831a_RGB/cogs_20210831a_RGB.vrt" subset.tif
 </code></pre>
 
-Sooo, think about if you combined these last two pieces to chip out tiles to pass to AI/ML. Instead of writing an arbitrary size tiff, you could output a 256x256 JPEG with worldfile, pass that to your algorithm then use the worldfile with the classified image (maybe tiff for thematic data) to georeference. Have a script that generates 256x256 bounds (need to consider GSD) inside the bounding box of the data, select the ones that are wholey inside the valid area(s) then chip each one out in parallel. Potentially intersect the layer with an a priori AOI to limit the analysis extent to populated areas, transportation, etc. 
+Sooo, think about if you combined these last two pieces to chip out tiles to pass to AI/ML. Instead of writing an arbitrary size tiff, you could output a 256x256 JPEG with worldfile, pass that to your algorithm then use the worldfile with the classified image (maybe tiff for thematic data) to georeference. Have a script that generates 256x256 bounds (need to consider GSD) inside the bounding box of the data, select the ones that are wholly inside the valid area(s) then chip each one out in parallel. Potentially intersect the layer with an a priori AOI to limit the analysis extent to populated areas, transportation, etc. 
 
 Stack the virtual drivers to work with the tile index files
 <pre><code>ogr2ogr -f SQLite tile_index_20201030b_RGB.sqlite  "/vsitar/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2020_Hurricane_Zeta/20201030b_RGB/tile_index_20201030b_RGB.tar" </code></pre>
@@ -216,6 +216,8 @@ Stack the virtual drivers to work with the tile index files
 String the above together with some bash to edit the location attribute to have the full path to the images in the cloud.
 <pre><code>url='https://noaa-eri-pds.s3.amazonaws.com/2020_Hurricane_Zeta/20201030b_RGB/tile_index_20201030b_RGB.tar';pth=${url%/*};base=${url##*/};fn=${base%.tar};ogr2ogr -f SQLite $fn.sqlite '/vsitar/vsicurl/'$url;ogrinfo -dialect SQLite -sql "UPDATE $fn SET location = ('$pth'||'/'||location)" $fn.sqlite</code></pre>
 
+As above, but add path to pre-event JPGS.
+<pre><code>url='https://noaa-eri-pds.s3.amazonaws.com/2022_Pre_Event/EC2201a_OB_N_RGB/raw/EC2201a_OB_N.sqlite'; pth=${url%/*}; base=${url##*/}; fn=${base%.sqlite}; ogr2ogr -f SQLite $fn.sqlite '/vsicurl/'$url; ogrinfo -dialect SQLite -sql "UPDATE fp SET name = ('$pth'||'/'||name||'.jpg')" $fn.sqlite</code></pre>
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
 
