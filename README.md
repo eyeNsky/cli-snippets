@@ -1,4 +1,4 @@
-sometimes the knowing<br>
+sometimes the answer<br>
 can not be found in what works<br>
 but rather, what fails<br>
 
@@ -231,6 +231,15 @@ Returns:
 head ri_060cm_2018.txt 
 /vsicurl/https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/41071/m_4107102_ne_19_060_20180930.tif
 /vsicurl/https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/41071/m_4107102_se_19_060_20180930.tif
+...
+
+From the az cli:
+<pre><code>az storage blob list --account-name naipeuwest --container-name naip --num-results "*" --prefix v002/ca/2020/ca_060cm_2020 | grep -e '.tif"' | awk -F\" '{print $4}' > ca_060cm_2020.txt</code></pre>
+
+Returns:
+head ca_060cm_2020.txt 
+v002/ca/2020/ca_060cm_2020/32114/m_3211401_ne_11_060_20200524.tif
+v002/ca/2020/ca_060cm_2020/32114/m_3211401_nw_11_060_20200524.tif
 ...
 
 # OGR Examples
