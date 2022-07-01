@@ -237,10 +237,12 @@ From the az cli:
 <pre><code>az storage blob list --account-name naipeuwest --container-name naip --num-results "*" --prefix v002/ca/2020/ca_060cm_2020 | grep -e '.tif"' | awk -F\" '{print $4}' > ca_060cm_2020.txt</code></pre>
 
 Returns:
+<pre><code>
 head ca_060cm_2020.txt 
 v002/ca/2020/ca_060cm_2020/32114/m_3211401_ne_11_060_20200524.tif
 v002/ca/2020/ca_060cm_2020/32114/m_3211401_nw_11_060_20200524.tif
 ...
+</code></pre>
 
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
