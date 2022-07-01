@@ -244,6 +244,10 @@ v002/ca/2020/ca_060cm_2020/32114/m_3211401_nw_11_060_20200524.tif
 ...
 </code></pre>
 
+To download. Note: play around with -j in paralle and --max-connections in the az cli.
+
+<pre><code>az storage blob download --account-name naipeuwest --container-name naip --name v002/ca/2020/ca_060cm_2020/32114/m_3211401_ne_11_060_20200524.tif --file m_3211401_ne_11_060_20200524.tif --max-connections 32</code></pre>
+
 # OGR Examples
 https://github.com/dwtkns/gdal-cheat-sheet
 http://emapr.ceoas.oregonstate.edu/pages/education/how_to/how_to_ogr2ogr.html
