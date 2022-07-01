@@ -237,15 +237,13 @@ From the az cli:
 <pre><code>az storage blob list --account-name naipeuwest --container-name naip --num-results "*" --prefix v002/ca/2020/ca_060cm_2020 | grep -e '.tif"' | awk -F\" '{print $4}' > ca_060cm_2020.txt</code></pre>
 
 Returns:
-<pre><code>
-head ca_060cm_2020.txt 
+<pre><code>head ca_060cm_2020.txt 
 v002/ca/2020/ca_060cm_2020/32114/m_3211401_ne_11_060_20200524.tif
 v002/ca/2020/ca_060cm_2020/32114/m_3211401_nw_11_060_20200524.tif
-...
-</code></pre>
+...</code></pre>
 
-To download. Note: play around with -j in paralle and --max-connections in the az cli.
-
+To download. Note: play around with -j in parallel and --max-connections in the az cli.
+The default 2 for max connections takes over 2x as long as 32 to download.
 <pre><code>az storage blob download --account-name naipeuwest --container-name naip --name v002/ca/2020/ca_060cm_2020/32114/m_3211401_ne_11_060_20200524.tif --file m_3211401_ne_11_060_20200524.tif --max-connections 32</code></pre>
 
 # OGR Examples
