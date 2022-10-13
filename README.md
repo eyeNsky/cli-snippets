@@ -219,8 +219,10 @@ String the above together with some bash to edit the location attribute to have 
 As above, but add path to pre-event JPGS.
 <pre><code>url='https://noaa-eri-pds.s3.amazonaws.com/2022_Pre_Event/EC2201a_OB_N_RGB/raw/EC2201a_OB_N.sqlite'; pth=${url%/*}; base=${url##*/}; fn=${base%.sqlite}; ogr2ogr -f SQLite $fn.sqlite '/vsicurl/'$url; ogrinfo -dialect SQLite -sql "UPDATE fp SET name = ('$pth'||'/'||name||'.jpg')" $fn.sqlite</code></pre>
 
-Get exif for raw jpeg
+Get exif for raw jpeg, this skips the "FILECOUNT" jpgs.
 <pre><code>aws s3 ls --no-sign-request s3://noaa-eri-pds/2022_Hurricane_Ian/20220930b_RGB/raw/ | grep -e ".jpg" | grep -v "FILECOUNT" | awk '{split($0,a," ");print "curl -s https://noaa-eri-pds.s3.amazonaws.com/2022_Hurricane_Ian/20220930b_RGB/raw/"a[4]" | exiftool -j -fast - > "a[4]".json"}' | bash</code></pre>
+The "SourceFile tag ends up being "-", update it with this (not needed if running with local jpgs):
+<pre><code>parallel "sed -i 's|\"SourceFile\": \"-\"|\"SourceFile\": \"{.}\"|' {}" ::: *.json</code></pre>
 
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
