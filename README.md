@@ -168,7 +168,7 @@ Above does not add file name to the output. It only makes the footprints. This w
 parallel --progress 'gdal_calc.py --quiet -A {}  --A_band 1 -B {} --B_band 2 -C {} --C_band 3 --calc="1*logical_and(A>0,B>0,C>0)" --outfile ../fp/{}' ::: *.tif
 cd ../fp/
 parallel gdal_sieve.py {} ::: *.tif
-# the {.} at the end adds the tif name as the layer. End up looking like P15458929.1
+# the {.} at the end adds the tif name as the layer. Ends up looking like P15458929.1
 parallel --progress gdal_polygonize.py {} -f GML {.}.gml {.} ::: *.tif 
 # the -nln keeps ogr from writing separate layers for each fp
 for GML in *.gml;do ogr2ogr -nln fp -where "DN=1" -f SQLITE -append out.sqlite $GML;done
@@ -229,7 +229,7 @@ The "SourceFile tag ends up being "-", update it with this (not needed if runnin
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
 
-Scape available tiff data for a state/year
+Scrape available tiff data for a state/year
 <pre><code>wget --spider --force-html -r -l2 https://naipeuwest.blob.core.windows.net/naip/v002/ri/2018/ri_060cm_2018/index.html 2>&1 | grep -e ".tif" | grep -e "https" </code></pre>
 
 Turn that into links GDAL can recognize in a file:
