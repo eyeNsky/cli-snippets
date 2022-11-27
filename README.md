@@ -163,11 +163,11 @@ cd ../fp/
 ls *.tif | parallel --progress gdal_polygonize.py {} -f GML {.}.gml
 for GML in *.gml;do ogr2ogr -where "DN=1" -f SQLITE -append out.sqlite $GML;done</pre></code>
 
-Above does not add file name to the output. It only makes the footprints. This will add name into the gml_id field
+Above does not add file name to the output nor does it filter any pixels inside the image with 0,0,0 values. This will add name into the gml_id field and sieve the image for areas up to 3 pixels with 0,0,0 values (change with -st).
 <pre><code>
 parallel --progress 'gdal_calc.py --quiet -A {}  --A_band 1 -B {} --B_band 2 -C {} --C_band 3 --calc="1*logical_and(A>0,B>0,C>0)" --outfile ../fp/{}' ::: *.tif
 cd ../fp/
-parallel gdal_sieve.py {} ::: *.tif
+parallel gdal_sieve.py -st 3 {} ::: *.tif
 # the {.} at the end adds the tif name as the layer. Ends up looking like P15458929.1
 parallel --progress gdal_polygonize.py {} -f GML {.}.gml {.} ::: *.tif 
 # the -nln keeps ogr from writing separate layers for each fp
