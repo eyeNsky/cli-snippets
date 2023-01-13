@@ -197,6 +197,7 @@ GDAL info for VRT
 gdalinfo "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210902b_RGB/cogs_20210902b_RGB.vrt"
 </code></pre>
 
+
 Build a sqlite index of all data for a storm
 <pre><code>
 aws s3 ls --no-sign-request --recursive s3://noaa-eri-pds/2017_Hurricane_Irma/ | grep -e ".tif" | awk '{split($0,a," ");print "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/"a[4]}' | parallel -j 1 --progress gdaltindex Irma-noaa-eri-pds.sqlite "{}"
@@ -209,6 +210,9 @@ gdalbuildvrt out.vrt *.tif
 gdal_polygonize.py out.vrt out.shp
 </code></pre>
 The resultant shapefile has valid areas of 255 and nodata as 0. There may be very few in between values that can be ignored.
+
+Another way with the /vsicurl/ driver:
+<pre><code>gdalinfo /vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2022_Hurricane_Ian/20220929a_RGB/cogs_20220929a_RGB.vrt | grep -e ".tif"  | parallel --progress --trim rl '''gdal_translate -outsize 25% 25% -r average {} /vsistdout/ | gdal_polygonize.py -q -f GML -b mask /vsistdin/ /vsistdout/ | ogr2ogr -f GML {/.}.gml /vsistdin/ -where "DN = '255'" '''</code></pre>
 
 Subset an area from the VRT
 <pre><code>gdal_translate -projwin -90.00714 29.22805 -90.00496 29.22685 "/vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2021_Hurricane_Ida/20210831a_RGB/cogs_20210831a_RGB.vrt" subset.tif
