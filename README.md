@@ -175,6 +175,8 @@ for GML in *.gml;do ogr2ogr -nln fp -where "DN=1" -f SQLITE -append out.sqlite $
 # use ogrinfo to update the gml_id to the file name (will be different if you used a different driver)
 for GML in *.gml;do ogrinfo -dialect SQLite -sql "UPDATE fp SET gml_id = ('${GML/.gml/}') WHERE gml_id LIKE '${GML/.gml/}%'" out.sqlite ;done
 </pre></code>
+Similar idea, but get footprint for a COG.
+<pre><code>gdal_translate /vsicurl/https://noaa-eri-pds.s3.amazonaws.com/2022_Hurricane_Ian/20220929a_RGB/20220929aC0821500w263945n.tif /vsistdout/ | gdal_polygonize.py -q -f GML -b mask /vsistdin/ /vsistdout/ | ogr2ogr -f GML out.gml /vsistdin/ -where "DN = '255'"</pre></code>
 # Buffer and dissolve Sentinel Cloud mask
 <pre><code>ogr2ogr -f SQLITE cloud-buffer.sqlite  L1C_T18SVE_A024032_20200128T154938_MSK_CLOUDS_B00.gml -dialect sqlite -sql "select ST_Union(ST_buffer(geometry, 5000)) as geometry FROM MaskFeature"</pre></code>
 # zgrep Sentinal index to awk
