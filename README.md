@@ -234,6 +234,12 @@ Get exif for raw jpeg, this skips the "FILECOUNT" jpgs.
 The "SourceFile tag ends up being "-", update it with this (not needed if running with local jpgs):
 <pre><code>parallel "sed -i 's|\"SourceFile\": \"-\"|\"SourceFile\": \"{.}\"|' {}" ::: *.json</code></pre>
 
+Get all raw jpgs for an event (note the use of s5cmd rather than AWS CLI).
+<pre><code># Get the geoms
+s5cmd --no-sign-request --dry-run cp --flatten s3://noaa-eri-pds/2023_California/*/raw/*.geom . | s5cmd --no-sign-request run
+# Get the jpgs
+s5cmd --no-sign-request --dry-run cp --flatten s3://noaa-eri-pds/2023_California/*/raw/*.jpg . | s5cmd --no-sign-request run</code></pre>
+
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
 
