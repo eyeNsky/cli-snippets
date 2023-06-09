@@ -240,6 +240,17 @@ s5cmd --no-sign-request cp --flatten s3://noaa-eri-pds/2023_California/*/raw/*.g
 # Get the jpgs
 s5cmd --no-sign-request cp --flatten s3://noaa-eri-pds/2023_California/*/raw/*.jpg . </code></pre>
 
+# COG data on NOAA Digital Coast
+One zone, convert to 3 band then warp to 3857 COG tiled on zoom 12 grid <br>
+<pre><code>gdal_translate -b 1 -b 2 -b 3 /vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/FL_NAIP_2017_8754/FL_NAIP_2017.0.vrt fl_naip_3b.vrt
+gdalwarp -of COG -te -9353446.277200447 3522218.2633809224 -9343662.337579945 3532002.2030014247 -co TILING_SCHEME=GoogleMapsCompatible -co COMPRESS=WEBP -t_srs EPSG:3857 -co ZOOM_LEVEL=17 -wo SKIP_NOSOURCE=YES -srcnodata "0 0 0" -dstalpha fl_naip_3b.vrt 12_1092_1687.tif
+</pre></code
+Two zones
+<pre><code>gdal_translate -b 1 -b 2 -b 3 /vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/FL_NAIP_2017_8754/FL_NAIP_2017.0.vrt fl_naip_3b.vrt
+gdal_translate -b 1 -b 2 -b 3 /vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/FL_NAIP_2017_8754/FL_NAIP_2017.1.vrt fl_naip_3b_2.vrt
+gdalwarp -of COG -te -9353446.277200447 3522218.2633809224 -9343662.337579945 3532002.2030014247 -co TILING_SCHEME=GoogleMapsCompatible -co COMPRESS=WEBP -t_srs EPSG:3857 -co ZOOM_LEVEL=17 -wo SKIP_NOSOURCE=YES -srcnodata "0 0 0" -dstalpha fl_naip_3b.vrt fl_naip_3b_2.vrt 12_1092_1687.tif</pre></code>
+
+
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
 
