@@ -264,11 +264,11 @@ Next pass the list to parallel to make 3 band vrts pointing to the TIFs and make
 cat ct_2021_files.txt | parallel --progress gdal_translate -b 1 -b 2 -b 3 -of VRT  -a_nodata 0 {} 3b_vrt/{/.}.vrt
 gdaltindex -t_srs EPSG:4326 -src_srs_name EPSG -src_srs_format EPSG ct_2021.shp 3b_vrt/*.vrt </code></pre>
 The -src_srs switches tell gdal to make a column called 'EPSG' and list the EPSG code for each image in that column.<br>
-Now some bash-fu to get files listing the images in a particular zone for the tile index (or 1 file for a single zone):<pre><code>
-ogrinfo -dialect SQLITE -sql "select DISTINCT EPSG from ct_2021 " ct_2021.shp | grep -e "EPSG:" | grep -v "EPSG: " | awk '{split($0,a,":");print a[2]}' | parallel -j 1 "ogrinfo -dialect SQLITE -sql \"select location from ct_2021 where EPSG like 'EPSG:{}'\" ct_2021.shp | grep -e \"vrt\" | awk '{split(\$0,a,\" \");print a[4]}' > EPSG_{}.txt"</code></pre>
+Now some bash-fu to get files listing the images in a particular zone for the tile index (or 1 file for a single zone):<pre><code>ogrinfo -dialect SQLITE -sql "select DISTINCT EPSG from ct_2021 " ct_2021.shp | grep -e "EPSG:" | grep -v "EPSG: " | awk '{split($0,a,":");print a[2]}' | parallel -j 1 "ogrinfo -dialect SQLITE -sql \"select location from ct_2021 where EPSG like 'EPSG:{}'\" ct_2021.shp | grep -e \"vrt\" | awk '{split(\$0,a,\" \");print a[4]}' > EPSG_{}.txt"
+</code></pre>
 Then make VRTs for the resultant file(s):<br>
 <pre><code>parallel "gdalbuildvrt ct_2021_{/.}.vrt --optfile {}" ::: EPSG_*.txt</code></pre>
-And these VRTs are not the input to the code to tile out the COGs on Web Mercatory bounds.
+And these VRTs are not the input to the code to tile out the COGs on Web Mercator bounds.
 
 
 # NAIP data on Azure
