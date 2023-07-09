@@ -250,6 +250,26 @@ Two zones
 gdal_translate -b 1 -b 2 -b 3 /vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/FL_NAIP_2017_8754/FL_NAIP_2017.1.vrt fl_naip_3b_2.vrt
 gdalwarp -of COG -te -9353446.277200447 3522218.2633809224 -9343662.337579945 3532002.2030014247 -co TILING_SCHEME=GoogleMapsCompatible -co COMPRESS=WEBP -t_srs EPSG:3857 -co ZOOM_LEVEL=17 -wo SKIP_NOSOURCE=YES -srcnodata "0 0 0" -dstalpha fl_naip_3b.vrt fl_naip_3b_2.vrt 12_1092_1687.tif</pre></code>
 
+Slightly different approach that can be modified to run on a local or remote directory of NAIP when there aren't pre-exisitng VRTs by zone.<br>
+First get a list of the paths to COGs. For this example start with: 
+<pre><code>https://coastalimagery.blob.core.windows.net/digitalcoast/CT_NAIP_2021_9592/urllist_2021_4BandImagery_Connecticut_m9592.txt</code></pre>
+Clean it up so that it is just the tifs in a file called 'ct_2021_files.txt'.<br>
+<pre><code>/vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/CT_NAIP_2021_9592/m_4107361_se_18_060_20211103.tif
+/vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/CT_NAIP_2021_9592/m_4107361_sw_18_060_20211103.tif
+/vsicurl/https://coastalimagery.blob.core.windows.net/digitalcoast/CT_NAIP_2021_9592/m_4107362_ne_18_060_20211103.tif
+</code></pre>
+This list could be paths to remote COGs or files on the local file system.<br>
+Next pass the list to parallel to make 3 band vrts pointing to the TIFs and make a tile index:<br>
+<pre><code>mkdir 3b_vrt
+cat ct_2021_files.txt | parallel --progress gdal_translate -b 1 -b 2 -b 3 -of VRT  -a_nodata 0 {} 3b_vrt/{/.}.vrt
+gdaltindex -t_srs EPSG:4326 -src_srs_name EPSG -src_srs_format EPSG ct_2021.shp 3b_vrt/*.vrt </code></pre>
+The -src_srs switches tell gdal to make a column called 'EPSG' and list the EPSG code for each image in that column.<br>
+Now some bash-fu to get files listing the images in a particular zone for the tile index (or 1 file for a single zone):<pre><code>
+ogrinfo -dialect SQLITE -sql "select DISTINCT EPSG from ct_2021 " ct_2021.shp | grep -e "EPSG:" | grep -v "EPSG: " | awk '{split($0,a,":");print a[2]}' | parallel -j 1 "ogrinfo -dialect SQLITE -sql \"select location from ct_2021 where EPSG like 'EPSG:{}'\" ct_2021.shp | grep -e \"vrt\" | awk '{split(\$0,a,\" \");print a[4]}' > EPSG_{}.txt"</code></pre>
+Then make VRTs for the resultant file(s):<br>
+<pre><code>parallel "gdalbuildvrt ct_2021_{/.}.vrt --optfile {}" ::: EPSG_*.txt</code></pre>
+And these VRTs are not the input to the code to tile out the COGs on Web Mercatory bounds.
+
 
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
