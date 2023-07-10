@@ -268,7 +268,7 @@ Now some bash-fu to get files listing the images in a particular zone for the ti
 </code></pre>
 Then make VRTs for the resultant file(s):<br>
 <pre><code>parallel "gdalbuildvrt ct_2021_{/.}.vrt --optfile {}" ::: EPSG_*.txt</code></pre>
-And these VRTs are not the input to the code to tile out the COGs on Web Mercator bounds.
+And these VRTs are now the input to the code to tile out the COGs on Web Mercator bounds.
 
 
 # NAIP data on Azure
