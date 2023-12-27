@@ -270,6 +270,19 @@ Then make VRTs for the resultant file(s):<br>
 <pre><code>parallel "gdalbuildvrt ct_2021_{/.}.vrt --optfile {}" ::: EPSG_*.txt</code></pre>
 And these VRTs are now the input to the code to tile out the COGs on Web Mercator bounds.
 
+# Find COG data on NOAA Digital Coast 
+Use the query function exposed at: https://maps.coast.noaa.gov/arcgis/rest/services/DAV/ImageryFootprints/MapServer/0/query
+This returns all of the imagery for CONUS and PR/USVI to a geojson file<br>
+<pre><code>ogr2ogr -f GEOJSON dav_conus_2023-12-27.geojson "https://maps.coast.noaa.gov/arcgis/rest/services/DAV/ImageryFootprints/MapServer/0/query?returnGeometry=true&f=geojson&where=1%3D1&outfields=ID,ExternalProviderLink&spatialRel=esriSpatialRelIntersects&geometry=-14471719.852975663%2C2772980.1234724913%2C-7219234.872835806%2C6710343.413741576&callback=json"</code></pre>
+And the start of a snippet to get the URL for the Bulk Download<br>
+<pre><code>import json as js
+jin = '{ "links": [ { "missionid": 9520, "link": "https:\/\/www.fisheries.noaa.gov\/inport\/item\/67553", "label": "Metadata", "altlabel": "Metadata", "serviceID": 39 }, { "missionid": 9520, "link": "https:\/\/coast.noaa.gov\/dataviewer\/#\/imagery\/search\/where:ID=9520", "label": "DAV", "altlabel": "Custom Download", "serviceID": 45 }, { "missionid": 9520, "link": "https:\/\/chs.coast.noaa.gov\/htdata\/raster7\/imagery\/TX_NAIP_2020_9520\/index.html", "label": "Bulk Download", "altlabel": "Data File(s)", "serviceID": 46 } ] }'
+jread = js.loads(jin)
+for j in jread['links']: 
+    if j['label'] == 'Bulk Download': 
+            print(j['link'])
+... 
+https://chs.coast.noaa.gov/htdata/raster7/imagery/TX_NAIP_2020_9520/index.html</code></pre>
 
 # NAIP data on Azure
 <pre><code>https://naipeuwest.blob.core.windows.net/naip/v002/index.html</code></pre>
