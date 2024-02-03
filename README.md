@@ -67,6 +67,8 @@ There is an index for the 1m project areas here:
 <pre><code>https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/FullExtentSpatialMetadata/FESM_13.gpkg</pre></code>
 # ogr
 <pre><code> for SHP in &#42;/roads.shp; do ogr2ogr -sql "SELECT &#42; FROM roads WHERE "type" LIKE 'motorway' OR "type" LIKE 'trunk' OR "type" LIKE 'primary' " -f SQLite -nln osm -append osm_thin.sqlite $SHP;done</pre></code>
+Apply negative buffer to a UTM polygon. Note the from WKB. Very important...
+<pre><code> ogrinfo -dialect SQLITE -sql "UPDATE footprint SET GEOMETRY =  ST_Multi(ST_Buffer(ST_GeomFromWKB(GEOMETRY),-2.4))" test.sqlite</pre></code>
 
 # sed
 <pre><code>sed -i '' 's|http://aws.com/|http://azure.net/|' *.HTM</code></pre>
